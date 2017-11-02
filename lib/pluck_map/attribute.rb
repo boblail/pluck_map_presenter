@@ -1,6 +1,6 @@
 module PluckMap
   class Attribute
-    attr_reader :id, :selects, :name, :alias, :block
+    attr_reader :id, :selects, :name, :alias, :block, :options
 
     def initialize(id, options={})
       @id = id
@@ -16,6 +16,10 @@ module PluckMap
         raise ArgumentError, "You must select at least one column" if selects.empty?
         raise ArgumentError, "You must define a block if you are going to select " <<
           "more than one expression from the database" if selects.length > 1 && !block
+      end
+
+      @options = options.reject do |key, _|
+        %i{select as map value}.include? key
       end
     end
 
