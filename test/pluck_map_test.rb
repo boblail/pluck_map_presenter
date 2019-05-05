@@ -129,4 +129,18 @@ class PluckMapTest < Minitest::Test
     end
   end
 
+  context "when we've deliberately confused Rails' type_caster" do
+    should "be OK" do
+      presenter = PluckMap[Author].define do
+        string select: Arel.sql("COALESCE(NULL, 'four')")
+        number select: Arel.sql("COALESCE(NULL, 4)")
+      end
+
+      assert_equal [
+        { number: 4, string: 'four' },
+        { number: 4, string: 'four' }
+      ], presenter.to_h(authors)
+    end
+  end
+
 end
