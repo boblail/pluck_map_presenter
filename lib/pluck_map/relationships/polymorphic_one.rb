@@ -39,6 +39,8 @@ module PluckMap
 
             if @attributes_block.arity == 1
               @attributes_block.call(q)
+            elsif @attributes_block.arity == 2
+              @attributes_block.call(q, type)
             else
               q.instance_eval(&@attributes_block)
             end
